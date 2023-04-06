@@ -63,7 +63,7 @@ RETURN *
 ### Step 4: Cleanup duplicate relationships
 
 ```
-MATCH (a:Person)-[r:IS_SIMILAR_TO]-&gt;(b:Person) WHERE (b)-[:IS_SIMILAR_TO]-&gt;(a) AND
-id(a)&lt;id(b)
+MATCH (a:Person)-[r:IS_SIMILAR_TO]->(b:Person) WHERE (b)-[:IS_SIMILAR_TO]->(a) AND
+id(a) < id(b)
 DELETE r
 ```
