@@ -117,7 +117,8 @@ return count(*) ;
 ### Step 6: Creating NEXT relationships between room Events
 
 
-```call apoc.periodic.iterate("
+```
+call apoc.periodic.iterate("
 MATCH (v:Building )-[:HAS_ROOM]->(room:Room )
 RETURN id(room) as nid",
 "  MATCH (room:Room )-->(evt:Event)  
@@ -135,3 +136,36 @@ RETURN id(room) as nid",
 , { batchSize : 1 })
 ;
 ```
+## Some queries
+
+Check if we can find Rooms where there are hours with using energy to cool while there are no movements.
+
+```
+MATCH p=(e:Event)<-[:HAS_EVENT]-(r:Room)<-[:HAS_ROOM]-(b)
+WHERE e.sumMovement < 1
+AND e.avgUsage > 0
+RETURN p
+```
+
+There are here a query to sum the usage:
+```aidl
+MATCH p=(e:Event)<-[:HAS_EVENT]-(r:Room)<-[:HAS_ROOM]-(b)
+WHERE e.sumMovement < 1
+AND e.avgUsage > 0
+RETURN b.id as building, r.name AS room, sum(e.avgUsage) AS totalUsage, min(e.date) AS fromDate, max(e.date) as toDate
+```
+
+that will look like this:
+
+|Building   | Room                              | totalUsage | fromDate           | toDate             | 
+|----------|-----------------------------------|------------|--------------------|--------------------|
+|104       | master sleeping room              |1245.0      |2022-02-14T15:00:00Z|2022-10-06T09:00:00Z|
+|104       | guest room                        |49077.0     |2022-02-14T15:00:00Z|2022-11-25T11:00:00Z|
+|127       | Master                            |2993.0      |2022-08-01T17:00:00Z|2022-10-12T07:00:00Z|
+|127       | Secondary  (Guest Room) Entrance  |3343.0      |2022-08-24T18:00:00Z|2023-03-22T10:00:00Z|
+|127       |Secondary  (Guest Room) third bedroom |9751.0      |2022-08-01T17:00:00Z|2023-03-26T02:00:00Z|
+|121       | Master                            |6378.0      |2022-10-03T21:00:00Z|2022-11-25T07:00:00Z|
+|121       | Secondary  (Guest Room) Entrance  |210.0       |2022-07-19T20:00:00Z|2022-08-01T19:00:00Z|
+|121       | Secondary  (Guest Room) third bedroom |1878.0      |2022-08-14T09:00:00Z|2022-08-14T18:00:00Z|
+|303       |Secondary  (Guest Room) Back of the house Right |32612.0     |2022-07-23T14:00:00Z|2023-03-28T02:00:00Z|
+|303       | Secondary  (Guest Room)  Front of the house Left |297.0       |2022-08-01T18:00:00Z|2022-08-19T01:00:00Z|
