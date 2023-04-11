@@ -90,7 +90,8 @@ return count(*) ;
 
 In this file also temperature, humidity, pressure and battery information is present
 
-```:auto LOAD CSV WITH HEADERS FROM "https://github.com/kvegter/ws001/blob/main/data/condensed_sensor_data.csv?raw=true" as row
+```
+:auto LOAD CSV WITH HEADERS FROM "https://github.com/kvegter/ws001/blob/main/data/condensed_sensor_data.csv?raw=true" as row
 WITH row
 CALL {
    with row
