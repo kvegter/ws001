@@ -148,7 +148,7 @@ RETURN p
 ```
 
 There are here a query to sum the usage:
-```aidl
+```
 MATCH p=(e:Event)<-[:HAS_EVENT]-(r:Room)<-[:HAS_ROOM]-(b)
 WHERE e.sumMovement < 1
 AND e.avgUsage > 0
