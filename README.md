@@ -147,7 +147,7 @@ AND e.avgUsage > 0
 RETURN p
 ```
 
-There are here a query to sum the usage:
+Then here a query to sum the usage:
 ```
 MATCH p=(e:Event)<-[:HAS_EVENT]-(r:Room)<-[:HAS_ROOM]-(b)
 WHERE e.sumMovement < 1
